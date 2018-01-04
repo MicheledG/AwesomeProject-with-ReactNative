@@ -5,84 +5,56 @@
  */
 
 import React, { Component } from 'react';
-import {
-    AppRegistry,
-    View,
-    Image,
-    Text,
-    TextInput
-} from 'react-native';
+import {ScrollView} from 'react-native';
 
-class FruitBlinker extends Component {
+import {FruitBlinker} from './components/fruitblinker';
+import {PizzaTranslator} from './components/pizzatranslator';
+import {AlertButton} from "./components/alertbutton";
 
-    constructor(props){
-        super(props);
-        this.state = {showApple: true};
+import PushNotification from 'react-native-push-notifications';
 
-        //set a timer to change the fruit shown
-        setInterval(()=>{
-           this.setState((previousState)=>{
-               return {showApple: ! previousState.showApple};
-           })}, 1000);
+//set up code to enable PushNotifications
+PushNotification.configure({
 
-    };
+    // (optional) Called when Token is generated (iOS and Android)
+    onRegister: function(token) {
+        console.log( 'TOKEN:', token );
+    },
 
-    render() {
+    // (required) Called when a remote or local notification is opened or received
+    onNotification: function(notification) {
+        console.log( 'NOTIFICATION:', notification );
 
-        const apple = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Honeycrisp.jpg/1024px-Honeycrisp.jpg';
-        const bananas = 'https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg'
+        // process the notification
 
-        let pic = {};
-        if(this.state.showApple == true){
-            pic.uri = apple;
-        }
-        else{
-            pic.uri = bananas
-        }
+        // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
+        //notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
 
-        return (
-            <Image source={pic} style={{width:300, height:200}}/>
-        );
-    }
-}
+    // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
+    senderID: "800011711124",
 
-export default class PizzaTranslator extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            text: ''
-        };
 
-    }
+    // Should the initial notification be popped automatically
+    // default: true
+    popInitialNotification: true,
 
-    render(){
-        return(
-            <View style={{padding:10}}>
-                <TextInput
-                    style={{height:40}}
-                    placeholder='Type here to translate to PIZZA DICTIONARY!'
-                    onChangeText={(input) => this.setState({text: input})}
-                />
-                <Text style={{padding: 10, fontSize: 42}}>
-                    {this.state.text.split(' ').map((word) => word && '🍕').join(' ')}
-                </Text>
-            </View>
-        );
-    }
-}
+    /**
+     * (optional) default: true
+     * - Specified if permissions (ios) and token (android and ios) will requested or not,
+     * - if not, you must call PushNotificationsHandler.requestPermissions() later
+     */
+    requestPermissions: true,
+});
 
-class App extends Component {
+export default class App extends Component {
     render(){
         return (
-            <View style={{
-                flex:1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
+            <ScrollView>
                 <FruitBlinker/>
+                <AlertButton/>
                 <PizzaTranslator/>
-            </View>
+            </ScrollView>
         );
     }
 }

@@ -13,6 +13,7 @@ export class FirebaseNotificationController extends Component {
         };
 
         this.tokenHandler = this.tokenHandler.bind(this);
+        this.initialNotificationHandler = this.initialNotificationHandler.bind(this);
         this.foregroundNotificationHandler = this.foregroundNotificationHandler.bind(this);
     }
 
@@ -49,6 +50,7 @@ export class FirebaseNotificationController extends Component {
     //handle a notification that opens the app
     initialNotificationHandler(notification){
         console.log("Initial notification", notification);
+        this.props.onNotification(notification.title, notification.body);
     }
 
     //handle notifications arrived when the app is foreground

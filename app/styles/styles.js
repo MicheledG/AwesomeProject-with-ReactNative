@@ -14,6 +14,7 @@ export const Styles = StyleSheet.create({
     instructions: {
         textAlign: 'center',
         color: '#333333',
+        margin: 10,
     },
     picker: {
         width: 100,

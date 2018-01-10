@@ -13,7 +13,7 @@ import {
     Alert,
 } from 'react-native';
 
-import {Styles} from "../styles/styles";
+import {Styles} from "./styles/styles";
 import Firebase from 'react-native-firebase';
 import {FirebaseNotificationController} from './controllers/NotificationController'
 import {LocalNotificationButton} from './components/LocalNotificationButton';
@@ -26,10 +26,12 @@ export default class App extends Component {
         super(props);
 
         this.state = {
-          notificationInterval: -1,
+            notificationInterval: -1,
+            notification: null,
         };
 
         this.handleAppStateChange = this.handleAppStateChange.bind(this);
+        this.handleNotification = this.handleNotification.bind(this);
     }
 
     componentDidMount(){
@@ -67,11 +69,16 @@ export default class App extends Component {
     }
 
     //when a notification is elaborated by the notification controller
-    //we call 'handleNotification' right here because the app component
-    //is the uppermost component in components hierarchy that needs to
+    //we call 'handleNotification' right here because the this component
+    //is the uppermost component in hierarchy that needs to
     //know the notification message
     handleNotification(title, body){
-        Alert.alert(title, body);
+        const notification = {
+            title: title,
+            body: body
+        };
+
+        this.setState({notification: notification});
     }
 
     render(){
@@ -94,6 +101,9 @@ export default class App extends Component {
                     <Picker.Item label="OFF" value={-1}/>
                 </Picker>
                 <LocalNotificationButton/>
+                <Text style={Styles.instructions}>
+                    {JSON.stringify(this.state.notification)}
+                </Text>
                 <FirebaseNotificationController
                     onNotification={this.handleNotification}
                 />
